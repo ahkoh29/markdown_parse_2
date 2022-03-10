@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -53,6 +54,51 @@ public class MarkdownParseTest {
     @Test
     public void testLastLine() throws IOException {
         assertLinks(List.of("last line link should be found"), "testCases/lastLine.md");
+    }
+
+    @Test
+    public void testFail(){
+        assertEquals(2, 1+3); //should fail
+    }
+
+    @Test
+    public void testSnippet1() throws IOException{
+        ArrayList<String> result = new ArrayList<String>();
+        result.add("'google.com");
+        result.add("google.com");
+        result.add("ucsd.edu");
+
+        
+	    String contents = Files.readString(Paths.get("./snippet-1.md"));
+        ArrayList<String> links = MarkdownParse.getLinks(contents);
+
+        assertEquals(result, links);
+    }
+
+    @Test
+    public void testSnippet2() throws IOException{
+        ArrayList<String> result = new ArrayList<String>();
+        result.add("a.com");
+        result.add("a.com(())");
+        result.add("example.com");
+
+        
+	    String contents = Files.readString(Paths.get("./snippet-2.md"));
+        ArrayList<String> links = MarkdownParse.getLinks(contents);
+
+        assertEquals(result, links);
+    }
+
+    @Test
+    public void testSnippet3() throws IOException{
+        ArrayList<String> result = new ArrayList<String>();
+        result.add("https://ucsd-cse15l-w22.github.io/");
+
+        
+	    String contents = Files.readString(Path.of("./snippet-3.md"));
+        ArrayList<String> links = MarkdownParse.getLinks(contents);
+
+        assertEquals(result, links);
     }
 
     public static void assertLinks(List<String> expectedLinks, String fileName) throws IOException {
